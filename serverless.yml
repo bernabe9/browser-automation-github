@@ -1,0 +1,50 @@
+service: browser-automation-github
+
+provider:
+  name: aws
+  profile: default
+  runtime: nodejs8.10
+  environment:
+    CHECKS_TABLE: ${self:service}-${opt:stage, self:provider.stage}-checks
+    GITHUB_TOKEN: ${ssm:github-token}
+    NAMESPACE: Browser Automation
+    WEB_URL: http://browser-automation-dev.s3-website-us-east-1.amazonaws.com
+  iamRoleStatements:
+    - Effect: Allow
+      Resource: '*'
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+
+plugins:
+  - serverless-offline
+
+functions:
+  handler:
+    handler: lambdas/handler.handler
+    events:
+      - http:
+          path: webhook
+          method: post
+          cors: true
+
+resources:
+  Resources:
+    ChecksTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: sha
+            AttributeType: S
+        KeySchema:
+          - AttributeName: sha
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:provider.environment.CHECKS_TABLE}
