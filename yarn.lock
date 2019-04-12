@@ -1690,6 +1690,11 @@ punycode@^1.4.1:
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-1.4.1.tgz#c0d5a63b2718800ad8e1eb0fa5269c84dd41845e"
   integrity sha1-wNWmOycYgArY4esPpSachN1BhF4=
 
+qs@^6.7.0:
+  version "6.7.0"
+  resolved "https://registry.yarnpkg.com/qs/-/qs-6.7.0.tgz#41dc1a015e3d581f1621776be31afb2876a9b1bc"
+  integrity sha512-VCdBRNFTX1fyE7Nb6FYoURo/SPe62QCaAyzJvUjwRaIsc+NePBEniHlvxFmmX56+HZphIGtV0XeCirBtpDrTyQ==
+
 qs@~6.5.2:
   version "6.5.2"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.5.2.tgz#cb3ae806e8740444584ef154ce8ee98d403f3e36"
@@ -1861,6 +1866,11 @@ serverless-offline@^4.9.4:
     jsonwebtoken "^8.5.0"
     trim-newlines "^2.0.0"
     velocityjs "^1.1.3"
+
+serverless-pseudo-parameters@^2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/serverless-pseudo-parameters/-/serverless-pseudo-parameters-2.4.0.tgz#bf5ebe6948f60bbf69c7dc2cf4bd2a5ee7dc6761"
+  integrity sha512-lb9R62PUFdEAbbYH7pe1wzR7vtIpa8YI8OVcQ5LlLyE0+AxWG4bwEw33X5LE8+5oLwTy57Y/EevnxKnMeyiXxw==
 
 shebang-command@^1.2.0:
   version "1.2.0"

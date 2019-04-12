@@ -30,7 +30,8 @@ module.exports.handler = async (event, context, callback) => {
   await Checks.put({
     sha: body.pull_request.head.sha,
     repository: body.repository.full_name,
-    state: states.pending
+    state: states.pending,
+    prNumber: body.pull_request.number
   })
 
   return callback(

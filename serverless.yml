@@ -9,7 +9,14 @@ provider:
     GITHUB_TOKEN: ${ssm:github-token}
     NAMESPACE: Browser Automation
     WEB_URL: http://browser-automation-dev.s3-website-us-east-1.amazonaws.com
+    POST_DEPLOY_DELAY: 300
+    SQS_QUEUE_URL: https://sqs.#{AWS::Region}.amazonaws.com/#{AWS::AccountId}/queue
+    CONCURRENCY: 3
   iamRoleStatements:
+    - Effect: 'Allow'
+      Resource: '*'
+      Action:
+        - 'sqs:*'
     - Effect: Allow
       Resource: '*'
       Action:
@@ -22,6 +29,7 @@ provider:
 
 plugins:
   - serverless-offline
+  - serverless-pseudo-parameters
 
 functions:
   handler:
@@ -31,6 +39,29 @@ functions:
           path: webhook
           method: post
           cors: true
+
+  heroku-handler:
+    handler: lambdas/heroku-handler.handler
+    events:
+      - http:
+          path: heroku-webhook
+          method: post
+          cors: true
+
+  status-handler:
+    handler: lambdas/status-handler.handler
+    events:
+      - http:
+          path: status-webhook
+          method: post
+          cors: true
+
+  trigger:
+    handler: lambdas/trigger.trigger
+    events:
+      - sqs:
+          arn: arn:aws:sqs:#{AWS::Region}:#{AWS::AccountId}:queue
+          batchSize: 1
 
 resources:
   Resources:
@@ -48,3 +79,7 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
         TableName: ${self:provider.environment.CHECKS_TABLE}
+    queue:
+      Type: 'AWS::SQS::Queue'
+      Properties:
+        QueueName: 'queue'

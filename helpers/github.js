@@ -1,7 +1,7 @@
 const updatePullRequestStatus = ({ githubClient, params }) => {
   const stateDescription = {
     success: 'Yay! All test passed!',
-    pending: params.testExecution
+    pending: params.suiteExecution
       ? 'Running integration tests against your review app'
       : 'Waiting for the review app',
     error: 'Ups! Some test failed :('
@@ -10,9 +10,9 @@ const updatePullRequestStatus = ({ githubClient, params }) => {
     state: params.state,
     description: stateDescription[params.state],
     context: process.env.NAMESPACE,
-    ...(params.testExecution && {
+    ...(params.suiteExecution && {
       target_url: `${process.env.WEB_URL}/suite-executions/${
-        params.testExecution
+        params.suiteExecution
       }`
     })
   }

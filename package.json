@@ -21,7 +21,9 @@
   "dependencies": {
     "aws-sdk": "^2.437.0",
     "octonode": "^0.9.5",
-    "serverless-offline": "^4.9.4"
+    "qs": "^6.7.0",
+    "serverless-offline": "^4.9.4",
+    "serverless-pseudo-parameters": "^2.4.0"
   },
   "devDependencies": {
     "eslint": "^5.12.1",

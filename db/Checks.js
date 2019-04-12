@@ -12,11 +12,21 @@ class Checks {
         createdAt: timestamp,
         updatedAt: timestamp,
         state: data.state,
-        repository: data.repository
+        repository: data.repository,
+        prNumber: data.prNumber
       }
     }
     await dynamoDb.put(params).promise()
     return params
+  }
+
+  static async get(key) {
+    const params = {
+      TableName: process.env.CHECKS_TABLE,
+      Key: key
+    }
+    const result = await dynamoDb.get(params).promise()
+    return result
   }
 }
 
