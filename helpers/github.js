@@ -1,7 +1,7 @@
 const updatePullRequestStatus = ({ githubClient, params }) => {
   const stateDescription = {
     success: 'Yay! All test passed!',
-    pending: params.suiteExecution
+    pending: params.suiteExecutionId
       ? 'Running integration tests against your review app'
       : 'Waiting for the review app',
     error: 'Ups! Some test failed :('
@@ -10,17 +10,15 @@ const updatePullRequestStatus = ({ githubClient, params }) => {
     state: params.state,
     description: stateDescription[params.state],
     context: process.env.NAMESPACE,
-    ...(params.suiteExecution && {
+    ...(params.suiteExecutionId && {
       target_url: `${process.env.WEB_URL}/suite-executions/${
-        params.suiteExecution
+        params.suiteExecutionId
       }`
     })
   }
   return new Promise((resolve, reject) => {
     githubClient.post(
-      `/repos/${params.repository.full_name}/statuses/${
-        params.pull_request.head.sha
-      }`,
+      `/repos/${params.repository}/statuses/${params.sha}`,
       payload,
       {},
       (err, status, body) => {

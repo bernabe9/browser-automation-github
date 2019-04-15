@@ -1,18 +1,26 @@
+const { get } = require('../helpers/https')
 const Checks = require('../db/Checks')
+const { applyQueryParams } = require('../helpers/requests')
 
 // lambda function that triggers the suite execution
 module.exports.trigger = async event => {
-  const { sha } = JSON.parse(event.Records[0].body)
-  // const { url, sha } = JSON.parse(event.Records[0].body)
+  const { url, sha } = JSON.parse(event.Records[0].body)
 
-  // 0. get check row
   const check = await Checks.get({ sha })
   if (!check.Item) {
     return
   }
 
-  // 2. update check row - add review app url (use this url to map sha - url)
-  console.log('adding url to the check row')
+  // update check row with the url
+  await Checks.update({ sha, url })
 
-  // 3. send a request to browser automation with concurrency = process.env.CONCURRENCY
+  // Send a request to browser automation to start running the test suite
+  const params = {
+    suite: process.env.REVIEW_APP_SUITE_ID,
+    webhook: `${process.env.GW_URL}/status-webhook`,
+    concurrencyCount: process.env.CONCURRENCY,
+    url
+  }
+
+  await get(applyQueryParams(`${process.env.LAMBDA_URL}/run-suite`, params))
 }

@@ -1,3 +1,5 @@
+const queryString = require('query-string')
+
 const generateResponse = (code, payload) => ({
   statusCode: code,
   headers: {
@@ -10,7 +12,13 @@ const generateResponse = (code, payload) => ({
 const generateError = (code, err) =>
   generateResponse(code, { message: err.message })
 
+const applyQueryParams = (url, params = {}) => {
+  const queryParams = queryString.stringify(params)
+  return `${url}?${queryParams}`
+}
+
 module.exports = {
   generateResponse,
-  generateError
+  generateError,
+  applyQueryParams
 }

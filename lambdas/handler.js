@@ -22,9 +22,15 @@ module.exports.handler = async (event, context, callback) => {
     return callback(null, generateResponse(200, { message: 'Event ignored' }))
   }
 
+  // TODO DELETE THE CHECK ROW IF THE ACTION IS "closed" or "merged"
+
   await updatePullRequestStatus({
     githubClient,
-    params: { ...body, state: states.pending }
+    params: {
+      repository: body.repository.full_name,
+      state: states.pending,
+      sha: body.pull_request.head.sha
+    }
   })
 
   await Checks.put({

@@ -9,9 +9,17 @@ provider:
     GITHUB_TOKEN: ${ssm:github-token}
     NAMESPACE: Browser Automation
     WEB_URL: http://browser-automation-dev.s3-website-us-east-1.amazonaws.com
-    POST_DEPLOY_DELAY: 300
+    LAMBDA_URL: https://5mge3matzj.execute-api.us-east-1.amazonaws.com/dev
+    POST_DEPLOY_DELAY: 10
     SQS_QUEUE_URL: https://sqs.#{AWS::Region}.amazonaws.com/#{AWS::AccountId}/queue
     CONCURRENCY: 3
+    REVIEW_APP_SUITE_ID: feed4fa0-5f92-11e9-a1cb-c5176492666a
+    GW_URL:
+      Fn::Join:
+        - ''
+        - - 'https://'
+          - Ref: 'ApiGatewayRestApi'
+          - '.execute-api.#{AWS::Region}.amazonaws.com/${self:provider.stage}'
   iamRoleStatements:
     - Effect: 'Allow'
       Resource: '*'
@@ -72,9 +80,21 @@ resources:
         AttributeDefinitions:
           - AttributeName: sha
             AttributeType: S
+          - AttributeName: url
+            AttributeType: S
         KeySchema:
           - AttributeName: sha
             KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: urlIndex
+            KeySchema:
+              - AttributeName: url
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
