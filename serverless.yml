@@ -2,18 +2,18 @@ service: browser-automation-github
 
 provider:
   name: aws
-  profile: default
+  profile: serverless
   runtime: nodejs8.10
   environment:
     CHECKS_TABLE: ${self:service}-${opt:stage, self:provider.stage}-checks
     GITHUB_TOKEN: ${ssm:github-token}
     NAMESPACE: Browser Automation
     WEB_URL: http://browser-automation-dev.s3-website-us-east-1.amazonaws.com
-    LAMBDA_URL: https://5mge3matzj.execute-api.us-east-1.amazonaws.com/dev
+    LAMBDA_URL: https://hne0szawif.execute-api.us-east-1.amazonaws.com/dev
     POST_DEPLOY_DELAY: 10
     SQS_QUEUE_URL: https://sqs.#{AWS::Region}.amazonaws.com/#{AWS::AccountId}/queue
     CONCURRENCY: 3
-    REVIEW_APP_SUITE_ID: feed4fa0-5f92-11e9-a1cb-c5176492666a
+    REVIEW_APP_SUITE_ID: d54f1c20-5fbd-11e9-873a-19e414881069
     GW_URL:
       Fn::Join:
         - ''

@@ -11,7 +11,7 @@ const updatePullRequestStatus = ({ githubClient, params }) => {
     description: stateDescription[params.state],
     context: process.env.NAMESPACE,
     ...(params.suiteExecutionId && {
-      target_url: `${process.env.WEB_URL}/suite-executions/${
+      target_url: `${process.env.WEB_URL}/suite-execution/${
         params.suiteExecutionId
       }`
     })
